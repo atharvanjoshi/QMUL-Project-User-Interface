@@ -11,14 +11,16 @@ using Dropbox.Api.Files;
 
 namespace Project
 {
+
     public partial class MainPage : ContentPage
     {
-        static string token = "a1DQjzEuFusAAAAAAAAAAWnf1S2Zbekxm1h_9FJwB-xSxL1a6_5UBBf2RJCo6fZ9";
+        static string token = "rpzSI2olZbMAAAAAAAAAAXN3DalttE8YrVVmpHr_sY39B49Ssjwh6VHHi-NEYYjj";
+        static string url = "https://qmul-model-api.herokuapp.com/";
         public MainPage()
         {
             InitializeComponent();
         }
-
+        
         /**public string GetReleases(string url)
         {
             using (var httpClient = new System.Net.Http.HttpClient())
@@ -58,7 +60,11 @@ namespace Project
                 else
                 {
                     reportLabel.Text = "File Selected Successfully";
-                    reportLabel.IsVisible = true;
+                    reportLabel.IsVisible = false;
+                    sourceImg.IsVisible = false;
+                    loader.IsRunning = true;
+                    loader.IsVisible = true;
+
                     var stream = await fileResult.OpenReadAsync();
                     //resultImage.Source = ImageSource.FromStream(() => stream);
                     //resultImage.IsVisible = true;
@@ -72,21 +78,45 @@ namespace Project
                         //url = tx.Result.Url;
                         reportLabel.Text = "File Uploaded Successfully";
                     }
+                    //reportLabel.Text = file.FileName;
+                    //reportLabel.IsVisible = true;
+                    using (var httpClient = new System.Net.Http.HttpClient())
+                    {
+                        //httpClient.DefaultRequestHeaders.Add(RequestConstants.UserAgent, RequestConstants.UserAgentValue);
+                        var response = httpClient.GetStringAsync(new Uri(url)).Result;
+                        string result = response.ToString().Replace("\\",string.Empty);
+                        result = result.Replace("\"", string.Empty);
+                        double result2 = Convert.ToDouble(result);
+                        loader.IsVisible = false;
+                        loader.IsRunning = false;
+                        if(result2 < 0.5)
+                        {
+                            reportLabel.Text = "Benign";
+                            reportLabel.TextColor = Xamarin.Forms.Color.Green;
+                        }
+                        else
+                        {
+                            reportLabel.Text = "Malignant";
+                            reportLabel.TextColor = Xamarin.Forms.Color.Red;
+                        }
+                        reportLabel.FontSize = 30;
+                        reportLabel.IsVisible = true;
+                    }
+                    
                 }
-                //reportLabel.Text = file.FileName;
-                reportLabel.IsVisible = true;
-                IsBusy = true;
+                
+                
+                //IsBusy = true;
             }
             catch (Exception)
             {
+                loader.IsVisible = false;
+                loader.IsRunning = false;
                 reportLabel.Text = "No File Selected";
                 reportLabel.IsVisible = true;
             }
         }
 
-        private void takePhotoButton_Clicked(object sender, EventArgs e)
-        {
-
-        }
+        
     }
 }

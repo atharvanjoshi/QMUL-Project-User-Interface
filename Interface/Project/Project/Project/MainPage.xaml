@@ -4,16 +4,14 @@
              x:Class="Project.MainPage"
              x:Name="Page">
 
-    <StackLayout BackgroundColor="AntiqueWhite">
-        <Button x:Name="uploadButton" Clicked="uploadButton_Clicked" Text="Upload"/>
-        <Button x:Name="takePhotoButton" Clicked="takePhotoButton_Clicked" Text="Click Photo"/>
-            <Label x:Name="reportLabel" IsVisible="false"/>
-        <Image x:Name="resultImage" IsVisible="False"/>
-        <BoxView AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1"
-    BackgroundColor="Transparent"
-    InputTransparent="false"
-    IsVisible="{Binding Path=IsBusy, Source={x:Reference Page}}" />
-        <ActivityIndicator IsRunning="{Binding Path=IsBusy, Source={x:Reference Page}}" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds=".5,.5,-1,-1" />
-    </StackLayout>
+    <AbsoluteLayout BackgroundColor="AntiqueWhite">
+        <Image x:Name="sourceImg" Source="camera.png" AbsoluteLayout.LayoutBounds="140,290,100,150">
+            <Image.GestureRecognizers>
+                <TapGestureRecognizer Tapped="uploadButton_Clicked" />
+            </Image.GestureRecognizers>
+        </Image>
+        <Label x:Name="reportLabel" IsVisible="False" AbsoluteLayout.LayoutBounds="140,550,100,150"/>
+        <ActivityIndicator x:Name="loader" IsVisible="False" IsRunning="False" AbsoluteLayout.LayoutBounds="140,290,100,150"/>
+    </AbsoluteLayout>
 
 </ContentPage>
